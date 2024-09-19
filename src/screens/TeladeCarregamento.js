@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet, Image, Dimensions } from 'react-native';
 import { ActivityIndicator, MD2Colors } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
@@ -11,7 +11,12 @@ const LoadingScreen = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.navigate('Login');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Login' }],
+        })
+      );
     }, 3000); // Tempo em milissegundos (3 segundos aqui)
 
     return () => clearTimeout(timer); // Limpa o temporizador ao desmontar o componente
