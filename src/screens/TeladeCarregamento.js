@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import { View, StyleSheet, Image, Dimensions } from 'react-native';
-import { ActivityIndicator, MD2Colors } from 'react-native-paper';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation, CommonActions } from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { Dimensions, Image, StyleSheet } from 'react-native';
+import { ActivityIndicator, MD2Colors } from 'react-native-paper';
 
 const { width } = Dimensions.get('window');
 
