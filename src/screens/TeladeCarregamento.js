@@ -17,7 +17,7 @@ const LoadingScreen = () => {
           routes: [{ name: 'Login' }],
         })
       );
-    }, 3000); // Tempo em milissegundos (3 segundos aqui)
+    }, 1000); // Tempo em milissegundos (3 segundos aqui)
 
     return () => clearTimeout(timer); // Limpa o temporizador ao desmontar o componente
   }, [navigation]);
