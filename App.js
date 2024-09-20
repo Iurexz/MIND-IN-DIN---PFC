@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoadingScreen from './src/screens/TeladeCarregamento';
 import LoginScreen from './src/screens/TeladeLogin';
+import SignUpScreen from './src/screens/TelaCadastro';
 
 const Stack = createStackNavigator();
 
@@ -18,9 +19,12 @@ function App() {
       >
         {/* Tela de Carregamento */}
         <Stack.Screen name="Loading" component={LoadingScreen} />
-        
+
         {/* Tela de Login */}
         <Stack.Screen name="Login" component={LoginScreen} />
+
+        {/* Tela de Cadastro */}
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

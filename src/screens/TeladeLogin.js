@@ -49,7 +49,7 @@ export default function LoginScreen({ navigation }) {
         {/* Link para cadastro */}
         <Text style={styles.registerText}>
           Ainda não é cadastrado?{' '}
-          <Text style={styles.registerLink} onPress={() => navigation.navigate('Register')}>
+          <Text style={styles.registerLink} onPress={() => navigation.navigate('SignUp')}>
             Cadastre-se aqui
           </Text>
         </Text>
@@ -83,15 +83,15 @@ const styles = StyleSheet.create({
     height: 300,
     marginBottom: 20,
     marginTop: 100, // Ajuste a distância da imagem para o topo
-    alignSelf:'center',
-  
+    alignSelf: 'center',
+
   },
   loginBox: {
     backgroundColor: 'white',
     borderRadius: 30, // Bordas arredondadas
     padding: 50,
-     width: '110%', // Corrigido para não ultrapassar a largura da tela
-     height: '60%',
+    width: '110%', // Corrigido para não ultrapassar a largura da tela
+    height: '60%',
     alignItems: 'center',
     elevation: 5, // Sombra no Android
     shadowColor: '#000', // Sombra no iOS
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     marginTop: '30%', // Coloca a caixa na parte de baixo da tela
-    
+
   },
   title: {
     fontSize: 24,
