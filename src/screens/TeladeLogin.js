@@ -16,13 +16,13 @@ const LoginScreen = () => {
         style={styles.input}
       />
       <TextInput
-        label="Password"
+        label="Senha"
         value={password}
         onChangeText={text => setPassword(text)}
         secureTextEntry
         style={styles.input}
       />
-      <Button mode="contained" onPress={() => console.log('Login Pressed')} style={styles.button}>
+      <Button mode="contained" onPress={() => console.log('Login Pressionado')} style={styles.button}>
         Login
       </Button>
     </View>
