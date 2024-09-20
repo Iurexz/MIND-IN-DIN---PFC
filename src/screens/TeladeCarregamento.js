@@ -1,27 +1,39 @@
-
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Image, Dimensions } from 'react-native';
+import { Dimensions, Image, StyleSheet } from 'react-native';
 import { ActivityIndicator, MD2Colors } from 'react-native-paper';
 
 const { width } = Dimensions.get('window');
 
-const LoadingScreen = ({navigation}) => {
-    useEffect(() => {
-        setTimeout(() => {
-          navigation.replace('Login'); // Navega para a tela de login após 3 segundos
-        }, 3000);
-      }, [navigation]);
+const LoadingScreen = () => {
+  const navigation = useNavigation();
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Login' }],
+        })
+      );
+    }, 1000); // Tempo em milissegundos (3 segundos aqui)
+
+    return () => clearTimeout(timer); // Limpa o temporizador ao desmontar o componente
+  }, [navigation]);
 
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={['#124C3E', '#3D7E52', '#124C3E']}
+      style={styles.container}
+    >
       <Image 
         source={require('../../assets/image/mind in din.png')} 
         style={styles.logo} 
-        resizeMode="contain" // Ajusta a logo para caber na tela
+        resizeMode="contain"
       />
-      <ActivityIndicator animating={true} color={MD2Colors.red800} size="large" />
-    </View>
+      <ActivityIndicator animating={true} color={MD2Colors.white} size="large" />
+    </LinearGradient>
   );
 };
 
@@ -32,13 +44,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
   },
   logo: {
-    width: width * 0.8, // 80% da largura da tela
-    maxWidth: 300, // Largura máxima em pixels
-    height: undefined, // Mantém a proporção
-    aspectRatio: 1, // Ajusta a proporção para a imagem manter o formato
-    marginBottom: 20, // Espaço entre a logo e o indicador de carregamento
+    width: width * 0.9,
+    maxWidth: 250,
+    height: undefined,
+    aspectRatio: 1,
+    marginBottom: 20,
   },
 });
