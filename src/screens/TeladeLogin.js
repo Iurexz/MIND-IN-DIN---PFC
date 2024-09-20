@@ -21,7 +21,7 @@ export default function LoginScreen({ navigation }) {
         {/* Título */}
         <Text style={styles.title}>Login</Text>
 
-        {/* Campo de e-mail */}
+        {/* Campo de e-mails */}
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
