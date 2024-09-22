@@ -14,7 +14,7 @@ export default function SignUpScreen() {
         confirmPassword: '',
         phone: '',
     })
-
+    const [showWarning, setshowWarning] = useState(false) // Caixa de aviso
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [showDatePicker, setShowDatePicker] = useState(false)
@@ -22,13 +22,6 @@ export default function SignUpScreen() {
 
     const handleChange = (field, value) => {
         setInputValues({ ...inputValues, [field]: value })
-    }
-
-    const formatDate = (date) => {
-        const day = String(date.getDate()).padStart(2, '0')
-        const month = String(date.getMonth() + 1).padStart(2, '0')
-        const year = date.getFullYear()
-        return `${day}/${month}/${year}`
     }
 
     const formatPhone = (text) => {
@@ -46,6 +39,14 @@ export default function SignUpScreen() {
         handleChange('birthDate', formatDate(date))
     }
 
+    const formatDate = (date) => {
+        const day = date.getDate().toString().padStart(2, '0')
+        const month = (date.getMonth() + 1).toString().padStart(2, '0') // Meses começam do 0
+        const year = date.getFullYear()
+        return `${day}/${month}/${year}`
+    }
+
+
     return (
         <LinearGradient
             colors={['#124C3E', '#3D7E52', '#124C3E']}
@@ -62,7 +63,7 @@ export default function SignUpScreen() {
                     <View style={styles.inputBox}>
                         <TextInput
                             style={styles.input}
-                            placeholder="Nome Completo"
+                            placeholder="Nome completo..."
                             value={inputValues.name}
                             onChangeText={(text) => handleChange('name', text)}
                         />
@@ -73,7 +74,7 @@ export default function SignUpScreen() {
                     <View style={styles.inputBox}>
                         <TextInput
                             style={styles.input}
-                            placeholder="E-mail"
+                            placeholder="E-mail..."
                             value={inputValues.email}
                             onChangeText={(text) => handleChange('email', text)}
                             keyboardType="email-address"
@@ -84,7 +85,7 @@ export default function SignUpScreen() {
                     {/* Box do input da data de nascimento */}
                     <View style={styles.inputBox}>
                         <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
-                            <Text style={styles.dateText}>{inputValues.birthDate || 'Selecionar Data'}</Text>
+                            <Text style={styles.dateText}>{inputValues.birthDate || 'Selecione sua data de nascimento...'}</Text>
                         </TouchableOpacity>
                         <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
                     </View>
@@ -102,7 +103,7 @@ export default function SignUpScreen() {
                     <View style={styles.inputBox}>
                         <TextInput
                             style={styles.input}
-                            placeholder="Telefone"
+                            placeholder="Telefone..."
                             value={inputValues.phone}
                             onChangeText={(text) => handleChange('phone', formatPhone(text))}
                             keyboardType="phone-pad"
@@ -114,7 +115,7 @@ export default function SignUpScreen() {
                     <View style={styles.inputBox}>
                         <TextInput
                             style={styles.input}
-                            placeholder="Endereço"
+                            placeholder="Endereço..."
                             value={inputValues.address}
                             onChangeText={(text) => handleChange('address', text)}
                         />
@@ -126,7 +127,7 @@ export default function SignUpScreen() {
                     <View style={styles.inputBox}>
                         <TextInput
                             style={styles.input}
-                            placeholder="Senha"
+                            placeholder="Senha..."
                             value={inputValues.password}
                             onChangeText={(text) => handleChange('password', text)}
                             secureTextEntry={!showPassword}
@@ -140,7 +141,7 @@ export default function SignUpScreen() {
                     <View style={styles.inputBox}>
                         <TextInput
                             style={styles.input}
-                            placeholder="Confirmar Senha"
+                            placeholder="Confirmar senha..."
                             value={inputValues.confirmPassword}
                             onChangeText={(text) => handleChange('confirmPassword', text)}
                             secureTextEntry={!showConfirmPassword}
@@ -154,6 +155,11 @@ export default function SignUpScreen() {
                     <TouchableOpacity style={styles.button}>
                         <Text style={styles.buttonText}>Cadastrar</Text>
                     </TouchableOpacity>
+
+                    {showWarning || <View style={styles.warningBox}>
+                        <Text style={styles.warningText}>Algo deu errado, por favor tente novamente</Text>
+                    </View>}
+
                 </View>
             </View>
         </LinearGradient>
@@ -233,6 +239,22 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         fontSize: 16,
+        fontWeight: 'bold',
+    },
+
+    warningBox: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "red",
+        position: "absolute",
+        top: 650,
+        padding: 10,
+        borderRadius: 3,
+    },
+
+    warningText: {
+        color: 'white',
         fontWeight: 'bold',
     },
 })
