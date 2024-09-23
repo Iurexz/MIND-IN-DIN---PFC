@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { FontAwesome } from '@expo/vector-icons'
-import DateTimePickerModal from 'react-native-modal-datetime-picker'
+import DateTimePickerModal from 'react-native-modal-datetime-picker' // Importando o DateTimePicker
+import { Button } from 'react-native-web'
 
 export default function SignUpScreen() {
     const [inputValues, setInputValues] = useState({
@@ -14,7 +15,8 @@ export default function SignUpScreen() {
         confirmPassword: '',
         phone: '',
     })
-    const [showWarning, setshowWarning] = useState(false) // Caixa de aviso
+    const [showWarning, setShowWarning] = useState(true) // Caixa de aviso
+    const [warningText, setWarningText] = useState("") // Texto da caixa de aviso
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [showDatePicker, setShowDatePicker] = useState(false)
@@ -44,6 +46,28 @@ export default function SignUpScreen() {
         const month = (date.getMonth() + 1).toString().padStart(2, '0') // Meses começam do 0
         const year = date.getFullYear()
         return `${day}/${month}/${year}`
+    }
+
+    const closeWarning = () => {
+        setShowWarning(true)
+    }
+
+    const verifyInputs = () => {
+        if (inputValues.name === "" || inputValues.email === "" || inputValues.birthDate === "" || inputValues.phone === "" || inputValues.address === "" || inputValues.password === "" || inputValues.confirmPassword === "") {
+            setWarningText("Por favor, preencha todos os campos para realizar o cadastro.")
+            setShowWarning(false)
+        } else {
+            verifyPassword()
+        }
+    }
+
+    const verifyPassword = () => {
+        if (inputValues.password === inputValues.confirmPassword) {
+            setShowWarning(true)
+        } else {
+            setWarningText("As senhas digitadas não coincidem! Por favor tente novamente.")
+            setShowWarning(false)
+        }
     }
 
 
@@ -85,7 +109,7 @@ export default function SignUpScreen() {
                     {/* Box do input da data de nascimento */}
                     <View style={styles.inputBox}>
                         <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
-                            <Text style={styles.dateText}>{inputValues.birthDate || 'Selecione sua data de nascimento...'}</Text>
+                            <Text>{inputValues.birthDate || <Text style={styles.dateText}>Selecione sua data de nascimento...</Text>}</Text>
                         </TouchableOpacity>
                         <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
                     </View>
@@ -152,12 +176,15 @@ export default function SignUpScreen() {
                     </View>
 
                     {/* Botão de cadastro */}
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={verifyInputs}>
                         <Text style={styles.buttonText}>Cadastrar</Text>
                     </TouchableOpacity>
 
                     {showWarning || <View style={styles.warningBox}>
-                        <Text style={styles.warningText}>Algo deu errado, por favor tente novamente</Text>
+                        <Text style={styles.warningText}>{`${warningText}`}</Text>
+                        <TouchableOpacity style={styles.closeBtn} onPress={closeWarning}>
+                            <FontAwesome name="close" size={24} color="white" style={styles.icon} />
+                        </TouchableOpacity>
                     </View>}
 
                 </View>
@@ -244,17 +271,24 @@ const styles = StyleSheet.create({
 
     warningBox: {
         flex: 1,
-        justifyContent: "center",
+        flexDirection: 'row',
         alignItems: "center",
         backgroundColor: "red",
         position: "absolute",
-        top: 650,
+        top: 630,
         padding: 10,
         borderRadius: 3,
+        gap: 15,
     },
 
     warningText: {
         color: 'white',
         fontWeight: 'bold',
+        maxWidth: 300,
     },
+
+    closeBtn: {
+        borderLeftWidth: 1,
+        borderLeftColor: "white",
+    }
 })
