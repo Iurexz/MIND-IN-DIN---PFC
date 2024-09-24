@@ -3,7 +3,6 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import { LinearGradient } from 'expo-linear-gradient'
 import { FontAwesome } from '@expo/vector-icons'
 import DateTimePickerModal from 'react-native-modal-datetime-picker' // Importando o DateTimePicker
-import { Button } from 'react-native-web'
 
 export default function SignUpScreen() {
     const [inputValues, setInputValues] = useState({
@@ -27,12 +26,31 @@ export default function SignUpScreen() {
     }
 
     const formatPhone = (text) => {
-        const cleaned = text.replace(/[^0-9]/g, '')
-        const match = cleaned.match(/^(\d{0,2})(\d{0,5})(\d{0,4})$/)
-        if (match) {
-            return `${match[1]}${match[2] ? ' ' : ''}${match[2]}${match[3] ? '-' + match[3] : ''}`.trim()
+        // Remove todos os caracteres que não são números
+        const cleaned = text.replace(/\D/g, '')
+
+        // Limita a entrada a no máximo 11 dígitos
+        if (cleaned.length > 11) {
+            return inputValues.phone // Não permite mais de 11 dígitos
         }
-        return text
+
+        // Aplica a formatação (XX) XXXXX-XXXX
+        const match = cleaned.match(/^(\d{2})(\d{5})(\d{0,4})$/)
+        if (match) {
+            if (match[3]) {
+                return `(${match[1]}) ${match[2]}-${match[3]}`
+            } else {
+                return `(${match[1]}) ${match[2]}`
+            }
+        }
+
+        // Retorna o valor sem formatação se não atingir os 11 dígitos
+        return cleaned
+    }
+
+    const handlePhoneChange = (text) => {
+        const formattedPhone = formatPhone(text)
+        setInputValues({ ...inputValues, phone: formattedPhone })
     }
 
     const handleConfirmDate = (date) => {
@@ -53,10 +71,30 @@ export default function SignUpScreen() {
     }
 
     const verifyInputs = () => {
+        const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/ // Letras com acentos e espaços
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/ // Verifica se há um @ e termina com .com
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/ // Min 8 chars, 1 letra, 1 número, 1 símbolo
+
         if (inputValues.name === "" || inputValues.email === "" || inputValues.birthDate === "" || inputValues.phone === "" || inputValues.address === "" || inputValues.password === "" || inputValues.confirmPassword === "") {
             setWarningText("Por favor, preencha todos os campos para realizar o cadastro.")
             setShowWarning(false)
+        } else if (!inputValues.name.match(nameRegex)) {
+            setWarningText("Nome inválido. Use apenas letras e acentuações.")
+            setShowWarning(false)
+        } else if (!emailRegex.test(inputValues.email)) {
+            setWarningText("Email inválido. O email deve conter um '@' e terminar com '.com'.")
+            setShowWarning(false)
+        } else if (inputValues.phone.replace(/\D/g, '').length !== 11) {
+            setWarningText("O número de telefone deve conter 11 dígitos.")
+            setShowWarning(false)
+        } else if (!inputValues.password.match(passwordRegex)) {
+            setWarningText("A senha deve ter pelo menos 8 caracteres, incluindo 1 número, 1 letra e 1 símbolo.")
+            setShowWarning(false)
+        } else if (inputValues.password !== inputValues.confirmPassword) {
+            setWarningText("As senhas digitadas não coincidem! Por favor tente novamente.")
+            setShowWarning(false)
         } else {
+            setShowWarning(true)
             verifyPassword()
         }
     }
@@ -129,7 +167,7 @@ export default function SignUpScreen() {
                             style={styles.input}
                             placeholder="Telefone..."
                             value={inputValues.phone}
-                            onChangeText={(text) => handleChange('phone', formatPhone(text))}
+                            onChangeText={handlePhoneChange} // Agora o handlePhoneChange está correto
                             keyboardType="phone-pad"
                         />
                         <FontAwesome name="phone" size={24} color="black" style={styles.icon} />
@@ -145,7 +183,6 @@ export default function SignUpScreen() {
                         />
                         <FontAwesome name="home" size={24} color="black" style={styles.icon} />
                     </View>
-
 
                     {/* Box do input da senha */}
                     <View style={styles.inputBox}>
@@ -180,13 +217,13 @@ export default function SignUpScreen() {
                         <Text style={styles.buttonText}>Cadastrar</Text>
                     </TouchableOpacity>
 
+                    {/* Caixa de aviso */}
                     {showWarning || <View style={styles.warningBox}>
                         <Text style={styles.warningText}>{`${warningText}`}</Text>
                         <TouchableOpacity style={styles.closeBtn} onPress={closeWarning}>
                             <FontAwesome name="close" size={24} color="white" style={styles.icon} />
                         </TouchableOpacity>
                     </View>}
-
                 </View>
             </View>
         </LinearGradient>
@@ -256,10 +293,10 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        backgroundColor: '#3D7E52',
+        backgroundColor: '#388E3C',
         paddingVertical: 15,
         paddingHorizontal: 40,
-        borderRadius: 30,
+        borderRadius: 10,
         marginTop: 40,
     },
 
