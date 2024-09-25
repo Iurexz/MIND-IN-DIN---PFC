@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { FontAwesome } from '@expo/vector-icons'
-import DateTimePickerModal from 'react-native-modal-datetime-picker' // Importando o DateTimePicker
+import DateTimePickerModal from 'react-native-modal-datetime-picker'
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen'
 
 export default function SignUpScreen() {
     const [inputValues, setInputValues] = useState({
@@ -232,8 +233,8 @@ export default function SignUpScreen() {
 
 const styles = StyleSheet.create({
     container: {
-        width: "100%",
-        height: "100%",
+        width: widthPercentageToDP('100%'),
+        height: heightPercentageToDP('100%'),
         flex: 1,
         alignItems: "center",
         justifyContent: "flex-start",
@@ -241,28 +242,27 @@ const styles = StyleSheet.create({
 
     titleBox: {
         flex: 0,
-        marginTop: 70,
-        marginBottom: 30,
+        marginTop: heightPercentageToDP('7%'),
+        marginBottom: heightPercentageToDP('3%'),
         alignItems: "center"
     },
 
     title: {
         color: "white",
         fontWeight: "500",
-        fontSize: 30,
+        fontSize: heightPercentageToDP('3%'),
     },
 
     signUpBox: {
-        width: "100%",
-        height: "90%",
+        width: widthPercentageToDP('100%'),
+        height: heightPercentageToDP('90%'),
         backgroundColor: "white",
-        borderTopRightRadius: 30,
-        borderTopLeftRadius: 30,
+        borderTopRightRadius: heightPercentageToDP('3%'),
+        borderTopLeftRadius: heightPercentageToDP('3%'),
         flex: 1,
         alignItems: "center",
         justifyContent: "flex-start",
-        overflow: 'hidden',
-        padding: 40,
+        padding: heightPercentageToDP('4%'),
     },
 
     inputBox: {
@@ -270,39 +270,39 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
-        marginBottom: 10,
-        paddingVertical: 10,
+        marginBottom: heightPercentageToDP('1%'),
+        paddingVertical: heightPercentageToDP('1%'),
         width: '100%',
         position: 'relative',
     },
 
     input: {
         flex: 1,
-        fontSize: 16,
-        paddingVertical: 5,
-        paddingLeft: 10,
+        fontSize: heightPercentageToDP('1.8%'),
+        paddingVertical: heightPercentageToDP('0.5%'),
+        paddingLeft: heightPercentageToDP('1%'),
     },
 
     dateText: {
         color: "grey",
-        fontSize: 16,
+        fontSize: heightPercentageToDP('1.8%'),
     },
 
     icon: {
-        marginLeft: 10,
+        marginLeft: heightPercentageToDP('1%'),
     },
 
     button: {
         backgroundColor: '#388E3C',
-        paddingVertical: 15,
-        paddingHorizontal: 40,
-        borderRadius: 10,
-        marginTop: 40,
+        paddingVertical: heightPercentageToDP('1.5%'),
+        paddingHorizontal: heightPercentageToDP('4%'),
+        borderRadius: heightPercentageToDP('1%'),
+        marginTop: heightPercentageToDP('4%'),
     },
 
     buttonText: {
         color: 'white',
-        fontSize: 16,
+        fontSize: heightPercentageToDP('2%'),
         fontWeight: 'bold',
     },
 
@@ -312,16 +312,16 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "red",
         position: "absolute",
-        top: 630,
-        padding: 10,
-        borderRadius: 3,
-        gap: 15,
+        top: heightPercentageToDP('70%'),
+        padding: heightPercentageToDP('1%'),
+        borderRadius: heightPercentageToDP('0.3%'),
+        gap: heightPercentageToDP('1.5%'),
     },
 
     warningText: {
         color: 'white',
         fontWeight: 'bold',
-        maxWidth: 300,
+        maxWidth: widthPercentageToDP('70%'),
     },
 
     closeBtn: {
