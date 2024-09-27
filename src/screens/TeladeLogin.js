@@ -56,6 +56,9 @@ export default function LoginScreen({ navigation }) {
               Cadastre-se aqui
             </Text>
           </Text>
+          <Text style={styles.registerLink} onPress={() => navigation.navigate('ForgetPass')}>
+            Esqueci minha senha...
+          </Text>
 
           {/* Botão de login */}
           <TouchableOpacity style={styles.loginButton}>
@@ -133,6 +136,7 @@ const styles = StyleSheet.create({
   registerLink: {
     color: '#388E3C',
     fontWeight: 'bold',
+    marginTop: hp('1.2%'),
   },
   loginButton: {
     backgroundColor: '#388E3C',

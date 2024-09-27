@@ -115,119 +115,113 @@ export default function SignUpScreen() {
             colors={['#124C3E', '#3D7E52', '#124C3E']}
             style={styles.container}
         >
-            <View style={styles.container}>
-                <View style={styles.titleBox}>
-                    <Text style={styles.title}>Cadastre-se</Text>
-                    <Text style={styles.title}>aqui!</Text>
-                </View>
 
-                <View style={styles.signUpBox}>
-                    {/* Box do input do nome */}
-                    <View style={styles.inputBox}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Nome completo..."
-                            value={inputValues.name}
-                            onChangeText={(text) => handleChange('name', text)}
-                        />
-                        <FontAwesome name="user" size={24} color="black" style={styles.icon} />
-                    </View>
-
-                    {/* Box do input do e-mail */}
-                    <View style={styles.inputBox}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="E-mail..."
-                            value={inputValues.email}
-                            onChangeText={(text) => handleChange('email', text)}
-                            keyboardType="email-address"
-                        />
-                        <FontAwesome name="envelope" size={24} color="black" style={styles.icon} />
-                    </View>
-
-                    {/* Box do input da data de nascimento */}
-                    <View style={styles.inputBox}>
-                        <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
-                            <Text>{inputValues.birthDate || <Text style={styles.dateText}>Selecione sua data de nascimento...</Text>}</Text>
-                        </TouchableOpacity>
-                        <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
-                    </View>
-
-                    <DateTimePickerModal
-                        isVisible={showDatePicker}
-                        mode="date"
-                        date={selectedDate}
-                        onConfirm={handleConfirmDate}
-                        onCancel={() => setShowDatePicker(false)}
-                        maximumDate={new Date()} // Impede seleção de datas futuras
+            <View style={styles.signUpBox}>
+                {/* Box do input do nome */}
+                <View style={styles.inputBox}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Nome completo..."
+                        value={inputValues.name}
+                        onChangeText={(text) => handleChange('name', text)}
                     />
-
-                    {/* Box do input do telefone */}
-                    <View style={styles.inputBox}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Telefone..."
-                            value={inputValues.phone}
-                            onChangeText={handlePhoneChange} // Agora o handlePhoneChange está correto
-                            keyboardType="phone-pad"
-                        />
-                        <FontAwesome name="phone" size={24} color="black" style={styles.icon} />
-                    </View>
-
-                    {/* Box do input do endereço */}
-                    <View style={styles.inputBox}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Endereço..."
-                            value={inputValues.address}
-                            onChangeText={(text) => handleChange('address', text)}
-                        />
-                        <FontAwesome name="home" size={24} color="black" style={styles.icon} />
-                    </View>
-
-                    {/* Box do input da senha */}
-                    <View style={styles.inputBox}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Senha..."
-                            value={inputValues.password}
-                            onChangeText={(text) => handleChange('password', text)}
-                            secureTextEntry={!showPassword}
-                        />
-                        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                            <FontAwesome name={showPassword ? "eye" : "eye-slash"} size={24} color="black" style={styles.icon} />
-                        </TouchableOpacity>
-                    </View>
-
-                    {/* Box do input de confirmar senha */}
-                    <View style={styles.inputBox}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Confirmar senha..."
-                            value={inputValues.confirmPassword}
-                            onChangeText={(text) => handleChange('confirmPassword', text)}
-                            secureTextEntry={!showConfirmPassword}
-                        />
-                        <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
-                            <FontAwesome name={showConfirmPassword ? "eye" : "eye-slash"} size={24} color="black" style={styles.icon} />
-                        </TouchableOpacity>
-                    </View>
-
-                    {/* Botão de cadastro */}
-                    <TouchableOpacity style={styles.button} onPress={verifyInputs}>
-                        <Text style={styles.buttonText}>Cadastrar</Text>
-                    </TouchableOpacity>
-
-                    {/* Caixa de aviso */}
-                    {showWarning || <View style={styles.warningBox}>
-                        <Text style={styles.warningText}>{`${warningText}`}</Text>
-                        <TouchableOpacity style={styles.closeBtn} onPress={closeWarning}>
-                            <FontAwesome name="close" size={24} color="white" style={styles.icon} />
-                        </TouchableOpacity>
-                    </View>}
+                    <FontAwesome name="user" size={24} color="black" style={styles.icon} />
                 </View>
+
+                {/* Box do input do e-mail */}
+                <View style={styles.inputBox}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="E-mail..."
+                        value={inputValues.email}
+                        onChangeText={(text) => handleChange('email', text)}
+                        keyboardType="email-address"
+                    />
+                    <FontAwesome name="envelope" size={24} color="black" style={styles.icon} />
+                </View>
+
+                {/* Box do input da data de nascimento */}
+                <View style={styles.inputBox}>
+                    <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
+                        <Text>{inputValues.birthDate || <Text style={styles.dateText}>Selecione sua data de nascimento...</Text>}</Text>
+                    </TouchableOpacity>
+                    <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
+                </View>
+
+                <DateTimePickerModal
+                    isVisible={showDatePicker}
+                    mode="date"
+                    date={selectedDate}
+                    onConfirm={handleConfirmDate}
+                    onCancel={() => setShowDatePicker(false)}
+                    maximumDate={new Date()} // Impede seleção de datas futuras
+                />
+
+                {/* Box do input do telefone */}
+                <View style={styles.inputBox}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Telefone..."
+                        value={inputValues.phone}
+                        onChangeText={handlePhoneChange} // Agora o handlePhoneChange está correto
+                        keyboardType="phone-pad"
+                    />
+                    <FontAwesome name="phone" size={24} color="black" style={styles.icon} />
+                </View>
+
+                {/* Box do input do endereço */}
+                <View style={styles.inputBox}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Endereço..."
+                        value={inputValues.address}
+                        onChangeText={(text) => handleChange('address', text)}
+                    />
+                    <FontAwesome name="home" size={24} color="black" style={styles.icon} />
+                </View>
+
+                {/* Box do input da senha */}
+                <View style={styles.inputBox}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Senha..."
+                        value={inputValues.password}
+                        onChangeText={(text) => handleChange('password', text)}
+                        secureTextEntry={!showPassword}
+                    />
+                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                        <FontAwesome name={showPassword ? "eye" : "eye-slash"} size={24} color="black" style={styles.icon} />
+                    </TouchableOpacity>
+                </View>
+
+                {/* Box do input de confirmar senha */}
+                <View style={styles.inputBox}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Confirmar senha..."
+                        value={inputValues.confirmPassword}
+                        onChangeText={(text) => handleChange('confirmPassword', text)}
+                        secureTextEntry={!showConfirmPassword}
+                    />
+                    <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                        <FontAwesome name={showConfirmPassword ? "eye" : "eye-slash"} size={24} color="black" style={styles.icon} />
+                    </TouchableOpacity>
+                </View>
+
+                {/* Botão de cadastro */}
+                <TouchableOpacity style={styles.button} onPress={verifyInputs}>
+                    <Text style={styles.buttonText}>Cadastrar</Text>
+                </TouchableOpacity>
+
+                {/* Caixa de aviso */}
+                {showWarning || <View style={styles.warningBox}>
+                    <Text style={styles.warningText}>{`${warningText}`}</Text>
+                    <TouchableOpacity style={styles.closeBtn} onPress={closeWarning}>
+                        <FontAwesome name="close" size={24} color="white" style={styles.icon} />
+                    </TouchableOpacity>
+                </View>}
             </View>
-        </LinearGradient>
+        </LinearGradient >
     )
 }
 
@@ -240,19 +234,6 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
     },
 
-    titleBox: {
-        flex: 0,
-        marginTop: heightPercentageToDP('7%'),
-        marginBottom: heightPercentageToDP('3%'),
-        alignItems: "center"
-    },
-
-    title: {
-        color: "white",
-        fontWeight: "500",
-        fontSize: heightPercentageToDP('3%'),
-    },
-
     signUpBox: {
         width: widthPercentageToDP('100%'),
         height: heightPercentageToDP('90%'),
@@ -261,8 +242,9 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: heightPercentageToDP('3%'),
         flex: 1,
         alignItems: "center",
-        justifyContent: "flex-start",
+        justifyContent: "center",
         padding: heightPercentageToDP('4%'),
+        overflow: 'hidden',
     },
 
     inputBox: {
@@ -278,7 +260,7 @@ const styles = StyleSheet.create({
 
     input: {
         flex: 1,
-        fontSize: heightPercentageToDP('1.8%'),
+        fontSize: widthPercentageToDP('4'),
         paddingVertical: heightPercentageToDP('0.5%'),
         paddingLeft: heightPercentageToDP('1%'),
     },
@@ -295,7 +277,7 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: '#388E3C',
         paddingVertical: heightPercentageToDP('1.5%'),
-        paddingHorizontal: heightPercentageToDP('4%'),
+        paddingHorizontal: widthPercentageToDP('31%'),
         borderRadius: heightPercentageToDP('1%'),
         marginTop: heightPercentageToDP('4%'),
     },
@@ -307,13 +289,13 @@ const styles = StyleSheet.create({
     },
 
     warningBox: {
-        flex: 1,
+        flex: 0,
         flexDirection: 'row',
         alignItems: "center",
         backgroundColor: "red",
         position: "absolute",
-        top: heightPercentageToDP('70%'),
         padding: heightPercentageToDP('1%'),
+        top: heightPercentageToDP('82%'),
         borderRadius: heightPercentageToDP('0.3%'),
         gap: heightPercentageToDP('1.5%'),
     },

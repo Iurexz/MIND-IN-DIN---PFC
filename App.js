@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoadingScreen from './src/screens/TeladeCarregamento';
 import LoginScreen from './src/screens/TeladeLogin';
 import SignUpScreen from './src/screens/TelaCadastro';
+import ForgetPassScreen from './src/screens/TelaEsqueciSenha';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,9 @@ function App() {
 
         {/* Tela de Cadastro */}
         <Stack.Screen name="SignUp" component={SignUpScreen} />
+
+        {/* Esqueci a senha */}
+        <Stack.Screen name="ForgetPass" component={ForgetPassScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
