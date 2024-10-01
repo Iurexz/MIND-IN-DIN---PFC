@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import { LinearGradient } from 'expo-linear-gradient'
 import { FontAwesome } from '@expo/vector-icons'
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen'
+import * as Clipboard from 'expo-clipboard'
 
 export default function ForgetPassScreen() {
     const [inputValues, setInputValues] = useState({
@@ -11,12 +12,52 @@ export default function ForgetPassScreen() {
         token: '',
     })
 
+    const [error, setError] = useState({
+        token: "",
+        newPassword: "",
+        confirmNewPassword: "",
+    })
+
     const handleChange = (field, value) => {
         setInputValues({ ...inputValues, [field]: value })
+        setError({ ...error, [field]: '' })
     }
 
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+    const pasteFromClipboard = async () => {
+        const clipboardContent = await Clipboard.getStringAsync()
+        handleChange('token', clipboardContent)
+    }
+
+    const verifyInputs = () => {
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+
+        let newError = { token: "", newPassword: "", confirmNewPassword: "" }
+
+        if (inputValues.token === "") {
+            newError.token = "O código de verificação é obrigatório."
+        }
+
+        if (inputValues.newPassword === "") {
+            newError.newPassword = "A nova senha é obrigatória."
+        } else if (!inputValues.newPassword.match(passwordRegex)) {
+            newError.newPassword = "A senha deve ter pelo menos 8 caracteres, incluindo 1 número, 1 letra e 1 símbolo."
+        }
+
+        if (inputValues.confirmNewPassword === "") {
+            newError.confirmNewPassword = "A confirmação da senha é obrigatória."
+        } else if (inputValues.newPassword !== inputValues.confirmNewPassword) {
+            newError.confirmNewPassword = "As senhas digitadas não coincidem!"
+        }
+
+        setError(newError)
+
+        if (!newError.token && !newError.newPassword && !newError.confirmNewPassword) {
+            // Processar a mudança de senha
+        }
+    }
 
     return (
         <LinearGradient
@@ -31,20 +72,28 @@ export default function ForgetPassScreen() {
                 </View>
 
                 {/* Código de verificação */}
-                <View style={styles.inputBox}>
+                <View style={[styles.inputBox, error.token ? styles.inputError : null]}>
                     <TextInput
                         style={styles.input}
                         placeholder="Código de verificação..."
-
+                        value={inputValues.token}
+                        onChangeText={(text) => handleChange('token', text)}
                     />
+                    <TouchableOpacity onPress={pasteFromClipboard}>
+                        <FontAwesome name="paste" size={22} color="black" style={styles.icon} />
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.errorBox}>
+                    {error.token ? <Text style={styles.errorText}>{error.token}</Text> : null}
                 </View>
 
                 {/* Box da senha */}
-                <View style={styles.inputBox}>
+                <View style={[styles.inputBox, error.newPassword ? styles.inputError : null]}>
                     <TextInput
                         style={styles.input}
-                        placeholder="Senha..."
-                        value={inputValues.password}
+                        placeholder="Nova senha..."
+                        value={inputValues.newPassword}
                         onChangeText={(text) => handleChange('newPassword', text)}
                         secureTextEntry={!showPassword}
                     />
@@ -52,13 +101,16 @@ export default function ForgetPassScreen() {
                         <FontAwesome name={showPassword ? "eye" : "eye-slash"} size={24} color="black" style={styles.icon} />
                     </TouchableOpacity>
                 </View>
+                <View style={styles.errorBox}>
+                    {error.newPassword ? <Text style={styles.errorText}>{error.newPassword}</Text> : null}
+                </View>
 
                 {/* Box da confirmação de senha */}
-                <View style={styles.inputBox}>
+                <View style={[styles.inputBox, error.confirmNewPassword ? styles.inputError : null]}>
                     <TextInput
                         style={styles.input}
-                        placeholder="Confirmar senha..."
-                        value={inputValues.password}
+                        placeholder="Confirmar nova senha..."
+                        value={inputValues.confirmNewPassword}
                         onChangeText={(text) => handleChange('confirmNewPassword', text)}
                         secureTextEntry={!showConfirmPassword}
                     />
@@ -67,10 +119,13 @@ export default function ForgetPassScreen() {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity style={styles.button}>
+                <View style={styles.errorBox}>
+                    {error.confirmNewPassword ? <Text style={styles.errorText}>{error.confirmNewPassword}</Text> : null}
+                </View>
+
+                <TouchableOpacity style={styles.button} onPress={verifyInputs}>
                     <Text style={styles.buttonText}>Mudar senha</Text>
                 </TouchableOpacity>
-
 
             </View>
         </LinearGradient>
@@ -121,6 +176,10 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
 
+    inputError: {
+        borderBottomColor: 'red',
+    },
+
     input: {
         flex: 1,
         fontSize: heightPercentageToDP('1.8%'),
@@ -147,4 +206,14 @@ const styles = StyleSheet.create({
         fontSize: heightPercentageToDP('2%'),
         fontWeight: 'bold',
     },
+
+    errorBox: {
+        width: widthPercentageToDP("83%"),
+        maxHeight: heightPercentageToDP("5%"),
+        paddingHorizontal: 3,
+    },
+
+    errorText: {
+        color: "red",
+    }
 })

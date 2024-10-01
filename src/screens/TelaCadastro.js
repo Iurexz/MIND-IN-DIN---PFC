@@ -15,8 +15,13 @@ export default function SignUpScreen() {
         confirmPassword: '',
         phone: '',
     })
-    const [showWarning, setShowWarning] = useState(true) // Caixa de aviso
-    const [warningText, setWarningText] = useState("") // Texto da caixa de aviso
+
+    const [error, setError] = useState({
+        token: "",
+        newPassword: "",
+        confirmNewPassword: "",
+    })
+
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [showDatePicker, setShowDatePicker] = useState(false)
@@ -24,18 +29,14 @@ export default function SignUpScreen() {
 
     const handleChange = (field, value) => {
         setInputValues({ ...inputValues, [field]: value })
+        setError({ ...error, [field]: '' })
     }
 
     const formatPhone = (text) => {
-        // Remove todos os caracteres que não são números
         const cleaned = text.replace(/\D/g, '')
-
-        // Limita a entrada a no máximo 11 dígitos
         if (cleaned.length > 11) {
             return inputValues.phone // Não permite mais de 11 dígitos
         }
-
-        // Aplica a formatação (XX) XXXXX-XXXX
         const match = cleaned.match(/^(\d{2})(\d{5})(\d{0,4})$/)
         if (match) {
             if (match[3]) {
@@ -44,14 +45,13 @@ export default function SignUpScreen() {
                 return `(${match[1]}) ${match[2]}`
             }
         }
-
-        // Retorna o valor sem formatação se não atingir os 11 dígitos
         return cleaned
     }
 
     const handlePhoneChange = (text) => {
         const formattedPhone = formatPhone(text)
         setInputValues({ ...inputValues, phone: formattedPhone })
+        setError({ ...error, phone: '' })
     }
 
     const handleConfirmDate = (date) => {
@@ -62,13 +62,9 @@ export default function SignUpScreen() {
 
     const formatDate = (date) => {
         const day = date.getDate().toString().padStart(2, '0')
-        const month = (date.getMonth() + 1).toString().padStart(2, '0') // Meses começam do 0
+        const month = (date.getMonth() + 1).toString().padStart(2, '0')
         const year = date.getFullYear()
         return `${day}/${month}/${year}`
-    }
-
-    const closeWarning = () => {
-        setShowWarning(true)
     }
 
     const verifyInputs = () => {
@@ -76,39 +72,34 @@ export default function SignUpScreen() {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/ // Verifica se há um @ e termina com .com
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/ // Min 8 chars, 1 letra, 1 número, 1 símbolo
 
+        let newError = {} // Novo objeto de erro
+
         if (inputValues.name === "" || inputValues.email === "" || inputValues.birthDate === "" || inputValues.phone === "" || inputValues.address === "" || inputValues.password === "" || inputValues.confirmPassword === "") {
-            setWarningText("Por favor, preencha todos os campos para realizar o cadastro.")
-            setShowWarning(false)
+            newError = { ...newError, form: "Por favor, preencha todos os campos para realizar o cadastro." }
         } else if (!inputValues.name.match(nameRegex)) {
-            setWarningText("Nome inválido. Use apenas letras e acentuações.")
-            setShowWarning(false)
+            newError = { ...newError, name: "Nome inválido. Use apenas letras e acentuações." }
         } else if (!emailRegex.test(inputValues.email)) {
-            setWarningText("Email inválido. O email deve conter um '@' e terminar com '.com'.")
-            setShowWarning(false)
+            newError = { ...newError, email: "Email inválido. O email deve conter um '@' e terminar com '.com'." }
         } else if (inputValues.phone.replace(/\D/g, '').length !== 11) {
-            setWarningText("O número de telefone deve conter 11 dígitos.")
-            setShowWarning(false)
+            newError = { ...newError, phone: "O número de telefone deve conter 11 dígitos." }
         } else if (!inputValues.password.match(passwordRegex)) {
-            setWarningText("A senha deve ter pelo menos 8 caracteres, incluindo 1 número, 1 letra e 1 símbolo.")
-            setShowWarning(false)
+            newError = { ...newError, password: "A senha deve ter pelo menos 8 caracteres, incluindo 1 número, 1 letra e 1 símbolo." }
         } else if (inputValues.password !== inputValues.confirmPassword) {
-            setWarningText("As senhas digitadas não coincidem! Por favor tente novamente.")
-            setShowWarning(false)
+            newError = { ...newError, confirmPassword: "As senhas digitadas não coincidem! Por favor tente novamente." }
         } else {
-            setShowWarning(true)
             verifyPassword()
         }
+
+        setError(newError)
     }
 
     const verifyPassword = () => {
         if (inputValues.password === inputValues.confirmPassword) {
-            setShowWarning(true)
+            setError({})
         } else {
-            setWarningText("As senhas digitadas não coincidem! Por favor tente novamente.")
-            setShowWarning(false)
+            setError({ confirmPassword: "As senhas digitadas não coincidem! Por favor tente novamente." })
         }
     }
-
 
     return (
         <LinearGradient
@@ -118,7 +109,7 @@ export default function SignUpScreen() {
 
             <View style={styles.signUpBox}>
                 {/* Box do input do nome */}
-                <View style={styles.inputBox}>
+                <View style={[styles.inputBox, error.name ? styles.inputError : null]}>
                     <TextInput
                         style={styles.input}
                         placeholder="Nome completo..."
@@ -128,8 +119,12 @@ export default function SignUpScreen() {
                     <FontAwesome name="user" size={24} color="black" style={styles.icon} />
                 </View>
 
+                <View style={styles.errorBox}>
+                    {error.name && <Text style={styles.errorText}>{error.name}</Text>}
+                </View>
+
                 {/* Box do input do e-mail */}
-                <View style={styles.inputBox}>
+                <View style={[styles.inputBox, error.confirmNewPassword ? styles.inputError : null]}>
                     <TextInput
                         style={styles.input}
                         placeholder="E-mail..."
@@ -140,8 +135,12 @@ export default function SignUpScreen() {
                     <FontAwesome name="envelope" size={24} color="black" style={styles.icon} />
                 </View>
 
+                <View style={styles.errorBox}>
+                    {error.email && <Text style={styles.errorText}>{error.email}</Text>}
+                </View>
+
                 {/* Box do input da data de nascimento */}
-                <View style={styles.inputBox}>
+                <View style={[styles.inputBox, error.confirmNewPassword ? styles.inputError : null]}>
                     <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
                         <Text>{inputValues.birthDate || <Text style={styles.dateText}>Selecione sua data de nascimento...</Text>}</Text>
                     </TouchableOpacity>
@@ -158,19 +157,23 @@ export default function SignUpScreen() {
                 />
 
                 {/* Box do input do telefone */}
-                <View style={styles.inputBox}>
+                <View style={[styles.inputBox, error.confirmNewPassword ? styles.inputError : null]}>
                     <TextInput
                         style={styles.input}
                         placeholder="Telefone..."
                         value={inputValues.phone}
-                        onChangeText={handlePhoneChange} // Agora o handlePhoneChange está correto
+                        onChangeText={handlePhoneChange}
                         keyboardType="phone-pad"
                     />
                     <FontAwesome name="phone" size={24} color="black" style={styles.icon} />
                 </View>
 
+                <View style={styles.errorBox}>
+                    {error.phone && <Text style={styles.errorText}>{error.phone}</Text>}
+                </View>
+
                 {/* Box do input do endereço */}
-                <View style={styles.inputBox}>
+                <View style={[styles.inputBox, error.confirmNewPassword ? styles.inputError : null]}>
                     <TextInput
                         style={styles.input}
                         placeholder="Endereço..."
@@ -181,7 +184,7 @@ export default function SignUpScreen() {
                 </View>
 
                 {/* Box do input da senha */}
-                <View style={styles.inputBox}>
+                <View style={[styles.inputBox, error.confirmNewPassword ? styles.inputError : null]}>
                     <TextInput
                         style={styles.input}
                         placeholder="Senha..."
@@ -194,8 +197,12 @@ export default function SignUpScreen() {
                     </TouchableOpacity>
                 </View>
 
-                {/* Box do input de confirmar senha */}
-                <View style={styles.inputBox}>
+                <View style={styles.errorBox}>
+                    {error.password && <Text style={styles.errorText}>{error.password}</Text>}
+                </View>
+
+                {/* Box do input da confirmação da senha */}
+                <View style={[styles.inputBox, error.confirmNewPassword ? styles.inputError : null]}>
                     <TextInput
                         style={styles.input}
                         placeholder="Confirmar senha..."
@@ -208,20 +215,19 @@ export default function SignUpScreen() {
                     </TouchableOpacity>
                 </View>
 
-                {/* Botão de cadastro */}
-                <TouchableOpacity style={styles.button} onPress={verifyInputs}>
+                <View style={styles.errorBox}>
+                    {error.confirmPassword && <Text style={styles.errorText}>{error.confirmPassword}</Text>}
+                </View>
+
+                <TouchableOpacity onPress={verifyInputs} style={styles.button}>
                     <Text style={styles.buttonText}>Cadastrar</Text>
                 </TouchableOpacity>
 
-                {/* Caixa de aviso */}
-                {showWarning || <View style={styles.warningBox}>
-                    <Text style={styles.warningText}>{`${warningText}`}</Text>
-                    <TouchableOpacity style={styles.closeBtn} onPress={closeWarning}>
-                        <FontAwesome name="close" size={24} color="white" style={styles.icon} />
-                    </TouchableOpacity>
-                </View>}
+                <View style={styles.errorBox}>
+                    {error.form && <Text style={styles.errorText}>{error.form}</Text>}
+                </View>
             </View>
-        </LinearGradient >
+        </LinearGradient>
     )
 }
 
@@ -244,7 +250,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         padding: heightPercentageToDP('4%'),
-        overflow: 'hidden',
     },
 
     inputBox: {
@@ -263,6 +268,10 @@ const styles = StyleSheet.create({
         fontSize: widthPercentageToDP('4'),
         paddingVertical: heightPercentageToDP('0.5%'),
         paddingLeft: heightPercentageToDP('1%'),
+    },
+
+    inputError: {
+        borderBottomColor: 'red',
     },
 
     dateText: {
@@ -288,26 +297,18 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
-    warningBox: {
-        flex: 0,
-        flexDirection: 'row',
-        alignItems: "center",
-        backgroundColor: "red",
-        position: "absolute",
-        padding: heightPercentageToDP('1%'),
-        top: heightPercentageToDP('82%'),
-        borderRadius: heightPercentageToDP('0.3%'),
-        gap: heightPercentageToDP('1.5%'),
-    },
-
-    warningText: {
-        color: 'white',
-        fontWeight: 'bold',
-        maxWidth: widthPercentageToDP('70%'),
-    },
-
     closeBtn: {
         borderLeftWidth: 1,
         borderLeftColor: "white",
+    },
+
+    errorBox: {
+        width: widthPercentageToDP("83%"),
+        maxHeight: heightPercentageToDP("5%"),
+        paddingHorizontal: 3,
+    },
+
+    errorText: {
+        color: "red",
     }
 })
