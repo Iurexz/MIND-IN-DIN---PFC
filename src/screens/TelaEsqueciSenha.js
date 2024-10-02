@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
 
     title: {
         fontWeight: "800",
-        fontSize: heightPercentageToDP('4%'),
+        fontSize: heightPercentageToDP('3%'),
     },
 
     signUpBox: {

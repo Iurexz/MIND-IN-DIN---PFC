@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, ScrollView } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { FontAwesome } from '@expo/vector-icons'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
@@ -17,9 +17,14 @@ export default function SignUpScreen() {
     })
 
     const [error, setError] = useState({
-        token: "",
-        newPassword: "",
-        confirmNewPassword: "",
+        name: '',
+        birthDate: '',
+        address: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        phone: '',
+        passNotEqual: ''
     })
 
     const [showPassword, setShowPassword] = useState(false)
@@ -72,184 +77,240 @@ export default function SignUpScreen() {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/ // Verifica se há um @ e termina com .com
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/ // Min 8 chars, 1 letra, 1 número, 1 símbolo
 
-        let newError = {} // Novo objeto de erro
+        let newError = {}
 
-        if (inputValues.name === "" || inputValues.email === "" || inputValues.birthDate === "" || inputValues.phone === "" || inputValues.address === "" || inputValues.password === "" || inputValues.confirmPassword === "") {
-            newError = { ...newError, form: "Por favor, preencha todos os campos para realizar o cadastro." }
+        if (inputValues.name === "") {
+            newError = { ...newError, name: "O nome é um campo obrigatório." }
         } else if (!inputValues.name.match(nameRegex)) {
             newError = { ...newError, name: "Nome inválido. Use apenas letras e acentuações." }
+        }
+
+        if (inputValues.email === "") {
+            newError = { ...newError, email: "O email é um campo obrigatório." }
         } else if (!emailRegex.test(inputValues.email)) {
-            newError = { ...newError, email: "Email inválido. O email deve conter um '@' e terminar com '.com'." }
+            newError = { ...newError, email: "Email inválido." }
+        }
+
+        if (inputValues.birthDate === "") {
+            newError = { ...newError, birthDate: "A data de nascimento é um campo obrigatório." }
+        }
+
+        if (inputValues.phone === "") {
+            newError = { ...newError, phone: "O número de telefone é um campo obrigatório." }
         } else if (inputValues.phone.replace(/\D/g, '').length !== 11) {
             newError = { ...newError, phone: "O número de telefone deve conter 11 dígitos." }
+        }
+
+        if (inputValues.address === "") {
+            newError = { ...newError, address: "O endereço é um campo obrigatório." }
+        }
+
+        if (inputValues.password === "") {
+            newError = { ...newError, password: "A senha é um campo obrigatório." }
         } else if (!inputValues.password.match(passwordRegex)) {
             newError = { ...newError, password: "A senha deve ter pelo menos 8 caracteres, incluindo 1 número, 1 letra e 1 símbolo." }
-        } else if (inputValues.password !== inputValues.confirmPassword) {
-            newError = { ...newError, confirmPassword: "As senhas digitadas não coincidem! Por favor tente novamente." }
+        }
+
+        if (inputValues.confirmPassword === "") {
+            newError = { ...newError, confirmPassword: "A senha é um campo obrigatório." }
+        } else if (inputValues.confirmPassword === inputValues.password) {
+            setError({})
         } else {
-            verifyPassword()
+            newError = { ...newError, confirmPassword: "As senhas digitadas não coincidem! Por favor tente novamente." }
         }
 
         setError(newError)
     }
 
-    const verifyPassword = () => {
-        if (inputValues.password === inputValues.confirmPassword) {
-            setError({})
-        } else {
-            setError({ confirmPassword: "As senhas digitadas não coincidem! Por favor tente novamente." })
-        }
-    }
-
     return (
+
+
         <LinearGradient
             colors={['#124C3E', '#3D7E52', '#124C3E']}
             style={styles.container}
         >
 
             <View style={styles.signUpBox}>
-                {/* Box do input do nome */}
-                <View style={[styles.inputBox, error.name ? styles.inputError : null]}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Nome completo..."
-                        value={inputValues.name}
-                        onChangeText={(text) => handleChange('name', text)}
-                    />
-                    <FontAwesome name="user" size={24} color="black" style={styles.icon} />
+
+                <View style={styles.titleBox}>
+                    <Text style={{ fontSize: 25, fontWeight: '700' }}>Cadastre-se</Text>
+                    <Text style={{ fontSize: 25, fontWeight: '700' }}>aqui!</Text>
                 </View>
 
-                <View style={styles.errorBox}>
-                    {error.name && <Text style={styles.errorText}>{error.name}</Text>}
-                </View>
+                <KeyboardAvoidingView style={styles.formBox}>
+                    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexGrow: 1 }} >
 
-                {/* Box do input do e-mail */}
-                <View style={[styles.inputBox, error.confirmNewPassword ? styles.inputError : null]}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="E-mail..."
-                        value={inputValues.email}
-                        onChangeText={(text) => handleChange('email', text)}
-                        keyboardType="email-address"
-                    />
-                    <FontAwesome name="envelope" size={24} color="black" style={styles.icon} />
-                </View>
 
-                <View style={styles.errorBox}>
-                    {error.email && <Text style={styles.errorText}>{error.email}</Text>}
-                </View>
+                        {/* Box do input do nome */}
+                        < View style={[styles.inputBox, error.name ? styles.inputError : null]}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Nome completo..."
+                                value={inputValues.name}
+                                onChangeText={(text) => handleChange('name', text)}
+                            />
+                            <FontAwesome name="user" size={24} color="black" style={styles.icon} />
+                        </View>
 
-                {/* Box do input da data de nascimento */}
-                <View style={[styles.inputBox, error.confirmNewPassword ? styles.inputError : null]}>
-                    <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
-                        <Text>{inputValues.birthDate || <Text style={styles.dateText}>Selecione sua data de nascimento...</Text>}</Text>
-                    </TouchableOpacity>
-                    <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
-                </View>
+                        <View style={styles.errorBox}>
+                            {error.name && <Text style={styles.errorText}>{error.name}</Text>}
+                        </View>
 
-                <DateTimePickerModal
-                    isVisible={showDatePicker}
-                    mode="date"
-                    date={selectedDate}
-                    onConfirm={handleConfirmDate}
-                    onCancel={() => setShowDatePicker(false)}
-                    maximumDate={new Date()} // Impede seleção de datas futuras
-                />
+                        {/* Box do input do e-mail */}
+                        <View style={[styles.inputBox, error.email ? styles.inputError : null]}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="E-mail..."
+                                value={inputValues.email}
+                                onChangeText={(text) => handleChange('email', text)}
+                                keyboardType="email-address"
+                            />
+                            <FontAwesome name="envelope" size={24} color="black" style={styles.icon} />
+                        </View>
 
-                {/* Box do input do telefone */}
-                <View style={[styles.inputBox, error.confirmNewPassword ? styles.inputError : null]}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Telefone..."
-                        value={inputValues.phone}
-                        onChangeText={handlePhoneChange}
-                        keyboardType="phone-pad"
-                    />
-                    <FontAwesome name="phone" size={24} color="black" style={styles.icon} />
-                </View>
+                        <View style={styles.errorBox}>
+                            {error.email && <Text style={styles.errorText}>{error.email}</Text>}
+                        </View>
 
-                <View style={styles.errorBox}>
-                    {error.phone && <Text style={styles.errorText}>{error.phone}</Text>}
-                </View>
+                        {/* Box do input da data de nascimento */}
+                        <View style={[styles.inputBox, error.birthDate ? styles.inputError : null]}>
+                            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
+                                <Text>{inputValues.birthDate || <Text style={styles.dateText}>Selecione sua data de nascimento...</Text>}</Text>
+                            </TouchableOpacity>
+                            <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
+                        </View>
 
-                {/* Box do input do endereço */}
-                <View style={[styles.inputBox, error.confirmNewPassword ? styles.inputError : null]}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Endereço..."
-                        value={inputValues.address}
-                        onChangeText={(text) => handleChange('address', text)}
-                    />
-                    <FontAwesome name="home" size={24} color="black" style={styles.icon} />
-                </View>
+                        <DateTimePickerModal
+                            isVisible={showDatePicker}
+                            mode="date"
+                            date={selectedDate}
+                            onConfirm={handleConfirmDate}
+                            onCancel={() => setShowDatePicker(false)}
+                            maximumDate={new Date()} // Impede seleção de datas futuras
+                        />
 
-                {/* Box do input da senha */}
-                <View style={[styles.inputBox, error.confirmNewPassword ? styles.inputError : null]}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Senha..."
-                        value={inputValues.password}
-                        onChangeText={(text) => handleChange('password', text)}
-                        secureTextEntry={!showPassword}
-                    />
-                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                        <FontAwesome name={showPassword ? "eye" : "eye-slash"} size={24} color="black" style={styles.icon} />
-                    </TouchableOpacity>
-                </View>
+                        <View style={styles.errorBox}>
+                            {error.birthDate && <Text style={styles.errorText}>{error.birthDate}</Text>}
+                        </View>
 
-                <View style={styles.errorBox}>
-                    {error.password && <Text style={styles.errorText}>{error.password}</Text>}
-                </View>
+                        {/* Box do input do telefone */}
+                        <View style={[styles.inputBox, error.phone ? styles.inputError : null]}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Telefone..."
+                                value={inputValues.phone}
+                                onChangeText={handlePhoneChange}
+                                keyboardType="phone-pad"
+                            />
+                            <FontAwesome name="phone" size={24} color="black" style={styles.icon} />
+                        </View>
 
-                {/* Box do input da confirmação da senha */}
-                <View style={[styles.inputBox, error.confirmNewPassword ? styles.inputError : null]}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Confirmar senha..."
-                        value={inputValues.confirmPassword}
-                        onChangeText={(text) => handleChange('confirmPassword', text)}
-                        secureTextEntry={!showConfirmPassword}
-                    />
-                    <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
-                        <FontAwesome name={showConfirmPassword ? "eye" : "eye-slash"} size={24} color="black" style={styles.icon} />
-                    </TouchableOpacity>
-                </View>
+                        <View style={styles.errorBox}>
+                            {error.phone && <Text style={styles.errorText}>{error.phone}</Text>}
+                        </View>
 
-                <View style={styles.errorBox}>
-                    {error.confirmPassword && <Text style={styles.errorText}>{error.confirmPassword}</Text>}
-                </View>
+                        {/* Box do input do endereço */}
+                        <View style={[styles.inputBox, error.address ? styles.inputError : null]}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Endereço..."
+                                value={inputValues.address}
+                                onChangeText={(text) => handleChange('address', text)}
+                            />
+                            <FontAwesome name="home" size={24} color="black" style={styles.icon} />
+                        </View>
 
-                <TouchableOpacity onPress={verifyInputs} style={styles.button}>
-                    <Text style={styles.buttonText}>Cadastrar</Text>
-                </TouchableOpacity>
+                        <View style={styles.errorBox}>
+                            {error.address && <Text style={styles.errorText}>{error.address}</Text>}
+                        </View>
 
-                <View style={styles.errorBox}>
-                    {error.form && <Text style={styles.errorText}>{error.form}</Text>}
-                </View>
+                        {/* Box do input da senha */}
+                        <View style={[styles.inputBox, error.password ? styles.inputError : null]}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Senha..."
+                                value={inputValues.password}
+                                onChangeText={(text) => handleChange('password', text)}
+                                secureTextEntry={!showPassword}
+                            />
+                            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                                <FontAwesome name={showPassword ? "eye" : "eye-slash"} size={24} color="black" style={styles.icon} />
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={styles.errorBox}>
+                            {error.password && <Text style={styles.errorText}>{error.password}</Text>}
+                        </View>
+
+                        {/* Box do input da confirmação da senha */}
+                        <View style={[styles.inputBox, error.confirmPassword ? styles.inputError : null]}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Confirmar senha..."
+                                value={inputValues.confirmPassword}
+                                onChangeText={(text) => handleChange('confirmPassword', text)}
+                                secureTextEntry={!showConfirmPassword}
+                            />
+                            <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                <FontAwesome name={showConfirmPassword ? "eye" : "eye-slash"} size={24} color="black" style={styles.icon} />
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={styles.errorBox}>
+                            {error.confirmPassword && <Text style={styles.errorText}>{error.confirmPassword}</Text>}
+                        </View>
+
+                        <TouchableOpacity onPress={verifyInputs} style={styles.button}>
+                            <Text style={styles.buttonText}>Cadastrar</Text>
+                        </TouchableOpacity>
+
+                        <View style={styles.errorBox}>
+                            {error.form && <Text style={styles.errorText}>{error.form}</Text>}
+                        </View>
+
+                    </ScrollView>
+                </KeyboardAvoidingView >
+
             </View>
-        </LinearGradient>
+
+        </LinearGradient >
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        width: widthPercentageToDP('100%'),
-        height: heightPercentageToDP('100%'),
         flex: 1,
         alignItems: "center",
-        justifyContent: "flex-start",
+        justifyContent: "flex-end",
     },
 
     signUpBox: {
-        width: widthPercentageToDP('100%'),
-        height: heightPercentageToDP('90%'),
+        flex: 1,
         backgroundColor: "white",
-        borderTopRightRadius: heightPercentageToDP('3%'),
-        borderTopLeftRadius: heightPercentageToDP('3%'),
+        height: heightPercentageToDP("100%"),
+        width: widthPercentageToDP("100%"),
+        padding: widthPercentageToDP("4%"),
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        gap: heightPercentageToDP("3%")
+    },
+
+    titleBox: {
+        flex: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: heightPercentageToDP("5%")
+    },
+
+    formBox: {
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        padding: heightPercentageToDP('4%'),
     },
 
     inputBox: {
@@ -266,7 +327,7 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         fontSize: widthPercentageToDP('4'),
-        paddingVertical: heightPercentageToDP('0.5%'),
+        paddingVertical: heightPercentageToDP('0.9%'),
         paddingLeft: heightPercentageToDP('1%'),
     },
 
@@ -289,6 +350,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: widthPercentageToDP('31%'),
         borderRadius: heightPercentageToDP('1%'),
         marginTop: heightPercentageToDP('4%'),
+        marginBottom: heightPercentageToDP('1%'),
     },
 
     buttonText: {
