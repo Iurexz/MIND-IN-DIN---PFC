@@ -17,7 +17,7 @@ export default function LoginScreen({ navigation }) {
         style={styles.gradient}
       >
         {/* Imagem de login */}
-        <Image source={require('../../assets/image/Crypto banking and cryptocurrency wallet.png')} style={styles.image} />
+        <Image source={require('../../assets/image/logo 2.png')} style={styles.image} />
 
         {/* Caixa branca com bordas arredondadas */}
         <View style={styles.loginBox}>
@@ -53,11 +53,11 @@ export default function LoginScreen({ navigation }) {
           <Text style={styles.registerText}>
             Ainda não é cadastrado?{' '}
             <Text style={styles.registerLink} onPress={() => navigation.navigate('SignUp')}>
-              Cadastre-se aqui
+              Cadastre-se aqui.
             </Text>
           </Text>
           <Text style={styles.registerLink} onPress={() => navigation.navigate('ForgetPass')}>
-            Esqueci minha senha...
+            Esqueci minha senha
           </Text>
 
           {/* Botão de login */}
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: wp('60%'),
-    height: hp('25%'),
+    height: hp('20%'),
     marginBottom: hp('5%'),
     marginTop: hp('12%'),
     alignSelf: 'center',
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     padding: wp('10%'),
     width: wp('100%'),
-    height: hp('60%'),
+    height: hp('80%'),
     alignItems: 'center',
     elevation: 5,
     shadowColor: '#000',

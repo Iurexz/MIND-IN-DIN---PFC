@@ -28,7 +28,7 @@ const LoadingScreen = () => {
       style={styles.container}
     >
       <Image 
-        source={require('../../assets/image/mind in din.png')} 
+        source={require('../../assets/image/logo 1.png')} 
         style={styles.logo} 
         resizeMode="contain"
       />
