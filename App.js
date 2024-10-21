@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import LoadingScreen from './src/screens/TeladeCarregamento';
-import LoginScreen from './src/screens/TeladeLogin';
-import SignUpScreen from './src/screens/TelaCadastro';
-import ForgetPassScreen from './src/screens/TelaEsqueciSenha';
+import LoadingScreen from './src/screens/Loading/TeladeCarregamento';
+import LoginScreen from './src/screens/Login/TeladeLogin';
+import SignUpScreen from './src/screens/Registro/TelaCadastro';
+import ForgetPassScreen from './src/screens/ResetPassword/TelaEsqueciSenha';
 
 const Stack = createStackNavigator();
 
