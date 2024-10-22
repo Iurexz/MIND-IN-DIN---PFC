@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView } from 'react-native';
+import { KeyboardAvoidingView, ScrollView } from 'react-native'; // Adicione o ScrollView
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
@@ -17,62 +17,69 @@ export default function LoginScreen({ navigation }) {
         style={styles.gradient}
       >
         {/* Imagem de login */}
-        <Image source={require('../../assets/image/logo 2.png')} style={styles.image} />
+        <Image source={require('../../../assets/image/logo 2.png')} style={styles.image} />
 
-        {/* Caixa branca com bordas arredondadas */}
-        <View style={styles.loginBox}>
-          {/* Título */}
-          <Text style={styles.title}>Login</Text>
+        {/* ScrollView para permitir rolagem */}
+        <ScrollView
+          style={styles.scrollView}
+          keyboardDismissMode="on-drag"
+          contentContainerStyle={styles.scrollViewContent}
+        >
+          {/* Caixa branca com bordas arredondadas */}
+          <View style={styles.loginBox}>
+            {/* Título */}
+            <Text style={styles.title}>Login</Text>
 
-          {/* Campo de e-mail */}
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Seu e-mail..."
-              value={email}
-              onChangeText={setEmail}
-            />
-            <FontAwesome name="envelope" size={wp('6%')} color="black" />
-          </View>
+            {/* Campo de e-mail */}
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Seu e-mail..."
+                value={email}
+                onChangeText={setEmail}
+              />
+              <FontAwesome name="envelope" size={wp('6%')} color="black" />
+            </View>
 
-          {/* Campo de senha */}
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Sua senha..."
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
-            />
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-              <FontAwesome name={showPassword ? "eye" : "eye-slash"} size={wp('6%')} color="black" />
+            {/* Campo de senha */}
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Sua senha..."
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+              />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                <FontAwesome name={showPassword ? "eye" : "eye-slash"} size={wp('6%')} color="black" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Link para cadastro */}
+            <Text style={styles.registerText}>
+              Ainda não é cadastrado?{' '}
+              <Text style={styles.registerLink} onPress={() => navigation.navigate('SignUp')}>
+                Cadastre-se aqui.
+              </Text>
+            </Text>
+            <Text style={styles.registerLink} onPress={() => navigation.navigate('ForgetPass')}>
+              Esqueci minha senha
+            </Text>
+
+            {/* Botão de login */}
+            <TouchableOpacity style={styles.loginButton}>
+              <Text style={styles.loginButtonText}>Entrar</Text>
+            </TouchableOpacity>
+
+            {/* Botão Google */}
+            <TouchableOpacity style={styles.googleButton}>
+              <Image
+                source={{ uri: 'https://img.icons8.com/color/96/google-logo.png' }}
+                style={styles.googleIcon}
+              />
             </TouchableOpacity>
           </View>
-
-          {/* Link para cadastro */}
-          <Text style={styles.registerText}>
-            Ainda não é cadastrado?{' '}
-            <Text style={styles.registerLink} onPress={() => navigation.navigate('SignUp')}>
-              Cadastre-se aqui.
-            </Text>
-          </Text>
-          <Text style={styles.registerLink} onPress={() => navigation.navigate('ForgetPass')}>
-            Esqueci minha senha
-          </Text>
-
-          {/* Botão de login */}
-          <TouchableOpacity style={styles.loginButton}>
-            <Text style={styles.loginButtonText}>Entrar</Text>
-          </TouchableOpacity>
-
-          {/* Botão Google */}
-          <TouchableOpacity style={styles.googleButton}>
-            <Image
-              source={{ uri: 'https://img.icons8.com/color/96/google-logo.png' }}
-              style={styles.googleIcon}
-            />
-          </TouchableOpacity>
-        </View>
+        </ScrollView>
       </LinearGradient>
     </KeyboardAvoidingView>
   );
@@ -95,6 +102,15 @@ const styles = StyleSheet.create({
     marginBottom: hp('5%'),
     marginTop: hp('12%'),
     alignSelf: 'center',
+  },
+  scrollView: {
+    width: '100%',
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingBottom: hp('5%'), // Adiciona espaço na parte inferior
   },
   loginBox: {
     backgroundColor: 'white',

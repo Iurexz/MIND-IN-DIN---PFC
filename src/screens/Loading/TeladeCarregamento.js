@@ -27,9 +27,9 @@ const LoadingScreen = () => {
       colors={['#124C3E', '#3D7E52', '#124C3E']}
       style={styles.container}
     >
-      <Image 
-        source={require('../../assets/image/logo 1.png')} 
-        style={styles.logo} 
+      <Image
+        source={require('../../../assets/image/logo 1.png')}
+        style={styles.logo}
         resizeMode="contain"
       />
       <ActivityIndicator animating={true} color={MD2Colors.white} size="large" />
