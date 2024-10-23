@@ -169,142 +169,134 @@ export default function SignUpScreen({ navigation }) {
         <Text style={styles.title}>Crie sua Conta</Text>
         <Text style={styles.subtitle}>Faça sua conta Mind In Din e veja seu dindin render! 😉</Text>
 
-        <KeyboardAvoidingView style={styles.formBox}>
-          <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.scrollBox}>
+        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.scrollBox}>
 
-            {/* Campo Nome */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Seu nome..."
-                value={inputValues.name}
-                onChangeText={text => handleChange('name', text)}
-              />
-              <FontAwesome name="user" size={wp('6%')} color="black" />
-            </View>
-
-            {error.name ? <Text style={styles.errorText}>{error.name}</Text> : null}
-
-            {/* Campo Email */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Seu e-mail..."
-                value={inputValues.email}
-                onChangeText={text => handleChange('email', text)}
-                keyboardType="email-address"
-              />
-              <FontAwesome name="envelope" size={wp('6%')} color="black" />
-            </View>
-
-            {error.email ? <Text style={styles.errorText}>{error.email}</Text> : null}
-
-            {/* Campo Data de Nascimento */}
-            <View style={styles.inputContainer}>
-              <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
-                <Text>{inputValues.birthDate || <Text style={{ color: '#898989', fontSize: wp('4%') }}>Selecione sua data de nascimento...</Text>}</Text>
-              </TouchableOpacity>
-              <FontAwesome name="calendar" size={wp('6%')} color="black" />
-            </View>
-
-            {error.birthDate ? <Text style={styles.errorText}>{error.birthDate}</Text> : null}
-
-            <DateTimePickerModal
-              isVisible={showDatePicker}
-              mode="date"
-              date={selectedDate}
-              onConfirm={handleConfirmDate}
-              onCancel={() => setShowDatePicker(false)}
-              maximumDate={new Date()} // Impede seleção de datas futuras
+          {/* Campo Nome */}
+          <View style={[styles.inputContainer, error.name ? styles.errorLine : null]}>
+            <TextInput
+              style={styles.input}
+              placeholder="Seu nome..."
+              value={inputValues.name}
+              onChangeText={text => handleChange('name', text)}
             />
+            <FontAwesome name="user" size={wp('6%')} color="black" />
+          </View>
+          {error.name ? <Text style={styles.errorText}>{error.name}</Text> : null}
 
-            {/* Campo Telefone */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Seu Telefone..."
-                value={inputValues.phone}
-                onChangeText={text => handlePhoneChange(text)}
-                keyboardType="phone-pad"
-              />
-              <FontAwesome name="phone" size={wp('6%')} color="black" />
-            </View>
+          {/* Campo Email */}
+          <View style={[styles.inputContainer, error.email ? styles.errorLine : null]}>
+            <TextInput
+              style={styles.input}
+              placeholder="Seu e-mail..."
+              value={inputValues.email}
+              onChangeText={text => handleChange('email', text)}
+              keyboardType="email-address"
+            />
+            <FontAwesome name="envelope" size={wp('6%')} color="black" />
+          </View>
+          {error.email ? <Text style={styles.errorText}>{error.email}</Text> : null}
 
-            {error.phone ? <Text style={styles.errorText}>{error.phone}</Text> : null}
-
-            {/* Campo CEP */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Seu CEP..."
-                value={inputValues.cep}
-                onChangeText={text => handleCepChange(text)}
-                keyboardType="numeric"
-              />
-              {loading ? <ActivityIndicator size="small" color="#0000ff" /> : <FontAwesome name="map-marker" size={wp('6%')} color="black" />}
-            </View>
-
-            {error.cep ? <Text style={styles.errorText}>{error.cep}</Text> : null}
-
-            {/* Campo Senha */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Sua senha..."
-                value={inputValues.password}
-                onChangeText={text => handleChange('password', text)}
-                secureTextEntry={!showPassword}
-              />
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <FontAwesome name={showPassword ? "eye" : "eye-slash"} size={wp('6%')} color="black" />
-              </TouchableOpacity>
-            </View>
-
-            {error.password ? <Text style={styles.errorText}>{error.password}</Text> : null}
-
-            {/* Campo Confirmar Senha */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Confirme sua senha..."
-                value={inputValues.confirmPassword}
-                onChangeText={text => handleChange('confirmPassword', text)}
-                secureTextEntry={!showConfirmPassword}
-              />
-              <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
-                <FontAwesome name={showConfirmPassword ? "eye" : "eye-slash"} size={wp('6%')} color="black" />
-              </TouchableOpacity>
-            </View>
-
-            {error.confirmPassword ? <Text style={styles.errorText}>{error.confirmPassword}</Text> : null}
-
-            {/* Botão Continuar */}
-            <TouchableOpacity style={styles.continueButton} onPress={verifyInputs}>
-              <Text style={styles.continueButtonText}>Continuar</Text>
+          {/* Campo Data de Nascimento */}
+          <View style={[styles.inputContainer, error.birthDate ? styles.errorLine : null]}>
+            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
+              <Text>{inputValues.birthDate || <Text style={{ color: '#898989', fontSize: wp('4%') }}>Selecione sua data de nascimento...</Text>}</Text>
             </TouchableOpacity>
+            <FontAwesome name="calendar" size={wp('6%')} color="black" />
+          </View>
+          {error.birthDate ? <Text style={styles.errorText}>{error.birthDate}</Text> : null}
 
-            {/* Termos de uso e política */}
-            <Text style={styles.termsText}>
-              Ao criar conta você concorda com nossos
-              <Text style={styles.termsLink}> Termos de Uso </Text>e
-              <Text style={styles.termsLink}> Políticas de Privacidade.</Text>
-            </Text>
+          <DateTimePickerModal
+            isVisible={showDatePicker}
+            mode="date"
+            date={selectedDate}
+            onConfirm={handleConfirmDate}
+            onCancel={() => setShowDatePicker(false)}
+            maximumDate={new Date(2014, 11, 31)} // Define a data máxima como 31/12/2014
+            minimumDate={new Date(1930, 0, 1)} // Define a data mínima como 01/01/1930
+          />
 
-            {/* Botão Google */}
-            <TouchableOpacity style={styles.googleButton}>
-              <Image
-                source={{ uri: 'https://img.icons8.com/color/96/google-logo.png' }}
-                style={styles.googleIcon}
-              />
+          {/* Campo Telefone */}
+          <View style={[styles.inputContainer, error.phone ? styles.errorLine : null]}>
+            <TextInput
+              style={styles.input}
+              placeholder="Seu Telefone..."
+              value={inputValues.phone}
+              onChangeText={text => handlePhoneChange(text)}
+              keyboardType="phone-pad"
+            />
+            <FontAwesome name="phone" size={wp('6%')} color="black" />
+          </View>
+          {error.phone ? <Text style={styles.errorText}>{error.phone}</Text> : null}
+
+          {/* Campo CEP */}
+          <View style={[styles.inputContainer, error.cep ? styles.errorLine : null]}>
+            <TextInput
+              style={styles.input}
+              placeholder="Seu CEP..."
+              value={inputValues.cep}
+              onChangeText={text => handleCepChange(text)}
+              keyboardType="numeric"
+            />
+            {loading ? <ActivityIndicator size="small" color="#0000ff" /> : <FontAwesome name="map-marker" size={wp('6%')} color="black" />}
+          </View>
+          {error.cep ? <Text style={styles.errorText}>{error.cep}</Text> : null}
+
+          {/* Campo Senha */}
+          <View style={[styles.inputContainer, error.password ? styles.errorLine : null]}>
+            <TextInput
+              style={styles.input}
+              placeholder="Sua senha..."
+              value={inputValues.password}
+              onChangeText={text => handleChange('password', text)}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              <FontAwesome name={showPassword ? "eye" : "eye-slash"} size={wp('6%')} color="black" />
             </TouchableOpacity>
+          </View>
+          {error.password ? <Text style={styles.errorText}>{error.password}</Text> : null}
 
-            {/* Link para login */}
-            <Text style={styles.loginText}>
-              Já tem uma conta? <Text style={styles.loginLink} onPress={() => navigation.navigate('Login')}>Fazer Login</Text>
-            </Text>
+          {/* Campo Confirmar Senha */}
+          <View style={[styles.inputContainer, error.confirmPassword ? styles.errorLine : null]}>
+            <TextInput
+              style={styles.input}
+              placeholder="Confirme sua senha..."
+              value={inputValues.confirmPassword}
+              onChangeText={text => handleChange('confirmPassword', text)}
+              secureTextEntry={!showConfirmPassword}
+            />
+            <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+              <FontAwesome name={showConfirmPassword ? "eye" : "eye-slash"} size={wp('6%')} color="black" />
+            </TouchableOpacity>
+          </View>
+          {error.confirmPassword ? <Text style={styles.errorText}>{error.confirmPassword}</Text> : null}
 
-          </ScrollView>
-        </KeyboardAvoidingView>
+          {/* Botão Continuar */}
+          <TouchableOpacity style={styles.continueButton} onPress={verifyInputs}>
+            <Text style={styles.continueButtonText}>Continuar</Text>
+          </TouchableOpacity>
+
+          {/* Termos de uso e política */}
+          <Text style={styles.termsText}>
+            Ao criar conta você concorda com nossos
+            <Text style={styles.termsLink}> Termos de Uso </Text>e
+            <Text style={styles.termsLink}> Políticas de Privacidade.</Text>
+          </Text>
+
+          {/* Botão Google */}
+          <TouchableOpacity style={styles.googleButton}>
+            <Image
+              source={{ uri: 'https://img.icons8.com/color/96/google-logo.png' }}
+              style={styles.googleIcon}
+            />
+          </TouchableOpacity>
+
+          {/* Link para login */}
+          <Text style={styles.loginText}>
+            Já tem uma conta? <Text style={styles.loginLink} onPress={() => navigation.navigate('Login')}>Fazer Login</Text>
+          </Text>
+
+        </ScrollView>
       </View>
     </LinearGradient>
   )
@@ -337,17 +329,16 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     marginTop: hp('1%'), // Ajusta a margem superior
   },
-  formBox: {
-    flex: 0,
-    width: wp("100%"),
-    height: hp("70%"),
-  },
   scrollBox: {
+    flex: 0,
     flexGrow: 1,
     alignItems: 'center',
-    height: hp("120%"),
-    padding: wp("5%")
+    justifyContent: 'flex-start',
+    height: hp("130%"),
+    minHeight: hp("88%"),
+    width: wp("80%"),
   },
+
   title: {
     fontSize: wp('6%'),
     fontWeight: 'bold',
@@ -368,6 +359,9 @@ const styles = StyleSheet.create({
     marginBottom: hp('1%'),
     paddingVertical: hp('1%'),
     width: '90%',
+  },
+  errorLine: {
+    borderBottomColor: 'red',
   },
   input: {
     flex: 1,
@@ -421,5 +415,4 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: hp("1%")
   }
-});
-
+})
