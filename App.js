@@ -13,7 +13,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Profit"
+        initialRouteName="Loading"
         screenOptions={{
           headerShown: false, // Desativa os cabeçalhos das telas
           gestureEnabled: false, // Desativa o gesto de voltar se necessário
@@ -31,7 +31,7 @@ function App() {
         {/* Esqueci a senha */}
         <Stack.Screen name="ForgetPass" component={ForgetPassScreen} />
 
-        <Stack.Screen name="Profit" component={ProfitScreen} />
+        {/* <Stack.Screen name="Profit" component={ProfitScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
