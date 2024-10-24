@@ -30,9 +30,9 @@ export default function ProfitScreen() {
     }])
 
     const [recentProfit, setRecentProfit] = useState([])
-
     const [modalVisible, setModalVisible] = useState(false)
     const [profitModal, setProfitModal] = useState(false)
+    const [modalBars, setModalBars] = useState(false)
     const [selectedIcon, setselectedIcon] = useState("image")
 
     const openModal = () => {
@@ -86,7 +86,7 @@ export default function ProfitScreen() {
     }
 
     const formatCurrency = (value) => {
-        return R$`${value.toFixed(2).replace('.', ',')}` // Formato: R$ NNNN,NN
+        return `R$ ${value.toFixed(2).replace('.', ',')}` // Formato: R$ NNNN,NN
     }
 
     const handleIconName = (name) => {
@@ -106,6 +106,14 @@ export default function ProfitScreen() {
         }
 
         createCategory()
+    }
+
+    const openProfitBars = () => {
+        setModalBars(true)
+    }
+
+    const closeProfitBars = () => {
+        setModalBars(false)
     }
 
     const saveRecentProfit = () => {
@@ -136,9 +144,6 @@ export default function ProfitScreen() {
         setRecentProfit([...recentProfit, newProfit])
         closeProfitModal()
     }
-
-
-
 
     return (
         <LinearGradient
@@ -322,14 +327,14 @@ export default function ProfitScreen() {
                                 <View style={styles.recentProfit} key={index}>
                                     <FontAwesome name={recentProfit.icon} size={32} color="#1C5D1F" />
 
-                                    <View>
-                                        <Text style={{ fontSize: 14 }}>{recentProfit.name}</Text>
+                                    <View style={{ alignItems: 'center' }}>
+                                        <Text style={{ fontSize: 14, fontWeight: 500 }}>{recentProfit.name}</Text>
                                         <Text style={{ fontSize: 14 }}>{recentProfit.date}</Text>
                                     </View>
 
-                                    <Text style={{ fontSize: 14 }}>{formatCurrency(recentProfit.value)}</Text>
+                                    <Text style={{ fontSize: 14, fontWeight: 500 }}>{formatCurrency(recentProfit.value)}</Text>
 
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={openProfitBars}>
                                         <FontAwesome name="bars" size={22} color="#646464" />
                                     </TouchableOpacity>
                                 </View>
@@ -337,6 +342,33 @@ export default function ProfitScreen() {
                         ))}
                     </ScrollView>
                 </View>
+
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={modalBars}
+                    onRequestClose={closeProfitBars}
+                >
+                    <View style={styles.modalOverlay}>
+                        <View style={styles.modalContent}>
+
+                            <View style={styles.optionsBarsBox}>
+                                {[
+                                    { name: "Editar" },
+                                    { name: "Adicionar a uma categoria" },
+                                    { name: "Remover" },
+                                    { name: "Fechar" },
+                                ].map((option, index) => (
+                                    <TouchableOpacity style={[styles.optionsBarsText, option.name == "Editar" ? styles.noBorder : null]} key={index} onPress={option.name == "Fechar" ? closeProfitBars : null}>
+                                        <Text>{`${option.name}`}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+
+                        </View>
+                    </View>
+
+                </Modal>
 
                 <TouchableOpacity style={styles.addRecentBtn} onPress={openProfitModal}>
                     <FontAwesome name="plus" size={32} color="white" />
@@ -446,7 +478,7 @@ const styles = StyleSheet.create({
     },
 
     modalContent: {
-        width: wp("80%"),
+        maxWidth: wp("80%"),
         backgroundColor: "white",
         borderRadius: 10,
         padding: 20,
@@ -459,7 +491,7 @@ const styles = StyleSheet.create({
     },
 
     input: {
-        width: "100%",
+        width: wp("70%"),
         padding: 10,
         borderRadius: 5,
         marginBottom: 15,
@@ -517,7 +549,7 @@ const styles = StyleSheet.create({
         height: hp("5%"),
         backgroundColor: "#1C5D1F",
         position: 'absolute',
-        top: hp("65%"),
+        top: hp("55%"),
         left: hp("21%"),
         borderRadius: 100
     },
@@ -530,5 +562,24 @@ const styles = StyleSheet.create({
     scrollContent: {
         paddingBottom: hp("2%"), // Espaçamento inferior para o conteúdo
     },
+
+    optionsBarsBox: {
+        flex: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    optionsBarsText: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderColor: 'grey',
+        borderTopWidth: 0.5,
+        width: wp("50%"),
+        height: hp("5%"),
+    },
+
+    noBorder: {
+        borderTopWidth: 0,
+    }
 
 })

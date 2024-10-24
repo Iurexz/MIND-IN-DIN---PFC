@@ -5,6 +5,7 @@ import LoadingScreen from './src/screens/Loading/TeladeCarregamento';
 import LoginScreen from './src/screens/Login/TeladeLogin';
 import SignUpScreen from './src/screens/Registro/TelaCadastro';
 import ForgetPassScreen from './src/screens/ResetPassword/TelaEsqueciSenha';
+import ProfitScreen from './src/screens/Profits/ProfitScreen';
 
 const Stack = createStackNavigator();
 
@@ -12,7 +13,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Loading"
+        initialRouteName="Profit"
         screenOptions={{
           headerShown: false, // Desativa os cabeçalhos das telas
           gestureEnabled: false, // Desativa o gesto de voltar se necessário
@@ -29,6 +30,8 @@ function App() {
 
         {/* Esqueci a senha */}
         <Stack.Screen name="ForgetPass" component={ForgetPassScreen} />
+
+        <Stack.Screen name="Profit" component={ProfitScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
